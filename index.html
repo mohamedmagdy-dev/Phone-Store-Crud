@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,  initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Crud</title>
+  </head>
+  <body>
+    <header>
+      <h1>Mange Store</h1>
+    </header>
+    <main>
+      <div class="container">
+        <form>
+          <div class="row">
+            <div class="col">
+              <label for="product-title">Product Title</label>
+              <input
+                type="text"
+                id="product-title"
+                placeholder="Enter Your Product Title"
+                required
+              />
+            </div>
+            <div class="col">
+              <label for="product-category">Category</label>
+              <input
+                type="text"
+                id="product-category"
+                placeholder="Enter Your Product Category"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <label for="product-count">Product Count</label>
+            <input
+              type="number"
+              id="product-count"
+              placeholder="Enter Your Product Count"
+              min="1"
+            />
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="product-price">Product Price</label>
+              <input
+                type="number"
+                id="product-price"
+                placeholder="Enter Your Product Price"
+              />
+            </div>
+            <div class="col">
+              <label for="product-taxes">Product Taxes</label>
+              <input
+                type="number"
+                id="product-taxes"
+                placeholder="Enter Your Product Taxes"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <label for="ads">Ads</label>
+              <input type="number" id="ads" placeholder="Enter Your Ads" />
+            </div>
+            <div class="col">
+              <label for="discount">Discount</label>
+              <input
+                type="number"
+                id="discount"
+                placeholder="Enter Your Discount"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <p>Total Price Is : <span id="total-price-label">$</span></p>
+          </div>
+          <div class="row">
+            <button id="add-product">Add Product</button>
+          </div>
+          <div class="row">
+            <label for="search-product">Search Product</label>
+            <input
+              type="text"
+              id="search-product"
+              value="Enter Your Product Title Or Product Category"
+            />
+          </div>
+          <div class="row">
+            <button id="search-by-title">Search By Title</button>
+            <button id="search-by-category">Search By Category</button>
+          </div>
+          <div class="row">
+            <button id="del-all">
+              Delete All Product (<span id="product-count-label">0</span>)
+            </button>
+          </div>
+        </form>
+        <table>
+          <tr>
+            <td>Id</td>
+            <td>Title</td>
+            <td>Price</td>
+            <td>Taxes</td>
+            <td>Ads</td>
+            <td>Discount</td>
+            <td>Total</td>
+            <td>Category</td>
+            <td>Update</td>
+            <td>Delete</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Iphone</td>
+            <td>12000$</td>
+            <td>20%</td>
+            <td>100$</td>
+            <td>0$</td>
+            <td>13000$</td>
+            <td>Tv</td>
+            <td><button id="update-item">Update</button></td>
+            <td><button id="del-item">Delete</button></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Iphone</td>
+            <td>12000$</td>
+            <td>20%</td>
+            <td>100$</td>
+            <td>0$</td>
+            <td>13000$</td>
+            <td>Tv</td>
+            <td><button id="update-item">Update</button></td>
+            <td><button id="del-item">Delete</button></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Iphone</td>
+            <td>12000$</td>
+            <td>20%</td>
+            <td>100$</td>
+            <td>0$</td>
+            <td>13000$</td>
+            <td>Tv</td>
+            <td><button id="update-item">Update</button></td>
+            <td><button id="del-item">Delete</button></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Iphone</td>
+            <td>12000$</td>
+            <td>20%</td>
+            <td>100$</td>
+            <td>0$</td>
+            <td>13000$</td>
+            <td>Tv</td>
+            <td><button id="update-item">Update</button></td>
+            <td><button id="del-item">Delete</button></td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>Iphone</td>
+            <td>12000$</td>
+            <td>20%</td>
+            <td>100$</td>
+            <td>0$</td>
+            <td>13000$</td>
+            <td>Tv</td>
+            <td><button id="update-item">Update</button></td>
+            <td><button id="del-item">Delete</button></td>
+          </tr>
+        </table>
+      </div>
+    </main>
+    <script src="main.js"></script>
+  </body>
+</html>
