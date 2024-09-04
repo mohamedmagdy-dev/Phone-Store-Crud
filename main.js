@@ -21,11 +21,18 @@ if (localStorage.getItem("products")) {
   // Get Products From localStorage Add Into Arr
   products = JSON.parse(localStorage.getItem("products"));
   createProduct(products);
-  deleteItem();
 }
 
+// ALlow To Update Item Data
+updateItem();
+
+// ALlow To Delete Item From Dom And LocalStorage
+deleteItem();
+
+// To Update Products Count And Hide And Show Delete All Button
 delAllBtnToggle();
 
+// Add Product Into Page And LocalStorage
 addProductBtn.onclick = (e) => {
   e.preventDefault();
   if (
@@ -37,15 +44,26 @@ addProductBtn.onclick = (e) => {
     productTitle.value != "" &&
     productCount.value != ""
   ) {
-    addProductTolS();
+    // Generate ProductData Object And Push it into localStorage And into products Array
+    productData();
+
+    // Create Product And Push It into Page
     createProduct(products);
+
+    // ALlow To Update Item Data
+    updateItem();
+
+    // ALlow To Delete Item From Dom And LocalStorage
     deleteItem();
+
+    // To Update Products Count And Hide And Show Delete All Button
     delAllBtnToggle();
 
     totalPriceLabel.innerText = "0$";
   }
 };
 
+// Reset Every thing
 deleteAllBtn.onclick = (e) => {
   e.preventDefault();
   localStorage.clear();
@@ -54,24 +72,32 @@ deleteAllBtn.onclick = (e) => {
 };
 
 // show Total Price Dynamic
+productPrice.onchange = showTotalPrice;
+ads.onchange = showTotalPrice;
+productTaxes.onchange = showTotalPrice;
+discount.onchange = showTotalPrice;
 
-productPrice.onchange = () => {
-  showTotalPrice();
+// Filter Products By Title Or Category
+searchByCatBtn.onclick = (e) => {
+  e.preventDefault();
+  filterProducts("category");
 };
 
-ads.onchange = () => {
-  showTotalPrice();
+searchByTitleBtn.onclick = (e) => {
+  e.preventDefault();
+  filterProducts("title");
 };
 
-productTaxes.onchange = () => {
-  showTotalPrice();
+// To Reset Filter on Products
+searchProduct.onchange = () => {
+  let allProducts = productsTable.querySelectorAll("tr");
+  allProducts.forEach((el) => {
+    el.style.display = "table-row";
+  });
 };
 
-discount.onchange = () => {
-  showTotalPrice();
-};
-
-function addProductTolS() {
+// Generate ProductData Object And Push it into localStorage And into products Array
+function productData() {
   // Add product Into Arr
   for (let i = 0; i < +productCount.value; i++) {
     let productData = {
@@ -98,6 +124,8 @@ function addProductTolS() {
   localStorage.setItem("products", jsonObj);
 }
 
+// Create Product And Push It into Page
+
 function createProduct(products) {
   for (let productData of products) {
     let product = document.createElement("tr");
@@ -111,6 +139,9 @@ function createProduct(products) {
     let category = document.createElement("td");
     let updateBtnTd = document.createElement("td");
     let deleteBtnTd = document.createElement("td");
+
+    product.setAttribute("title", productData.title);
+    product.setAttribute("data-category", productData.category);
 
     // Controls Buttons
     let updateBtn = document.createElement("button");
@@ -161,8 +192,89 @@ function createProduct(products) {
   productCategory.value = "";
   productTitle.value = "";
   productCount.value = "";
+  discount.value = "";
 }
 
+// ALlow To Update Item Data
+function updateItem() {
+  let productsDom = productsTable.querySelectorAll("tr");
+  productsDom.forEach((el) => {
+    el.addEventListener("click", (e) => {
+      if (e.target.classList.contains("update-item")) {
+        let parent = e.target.parentNode.parentNode;
+        let targetId = parent.children[0].innerText;
+
+        productTitle.value = parent.children[1].innerText;
+        productPrice.value = parent.children[2].innerText;
+        productTaxes.value = parent.children[3].innerText;
+        ads.value = parent.children[4].innerText;
+        discount.value = parent.children[5].innerText;
+        productCategory.value = parent.children[7].innerText;
+
+        productCount.setAttribute("disabled", "");
+
+        showTotalPrice();
+
+        // ReEvent To Be Updater button
+        addProductBtn.innerText = "Update Product";
+        addProductBtn.onclick = (e) => {
+          e.preventDefault();
+          let updatedProducts = products.map((product) => {
+            if (targetId == +product.id) {
+              product.title = productTitle.value;
+              product.price = productPrice.value;
+              product.taxes = productTaxes.value;
+              product.ads = ads.value;
+              product.discount = discount.value;
+              product.category = productCategory.value;
+              product.total =
+                +productPrice.value +
+                +productTaxes.value +
+                +ads.value -
+                (+discount.value || 0);
+              el.category = productCategory.value;
+            }
+            return product;
+          });
+
+          // Update Products Into LocalStorage
+          localStorage.setItem("products", JSON.stringify(updatedProducts));
+
+          products = updatedProducts;
+
+          // ReAdd Products After Update
+          productsTable.innerHTML = "";
+
+          createProduct(updatedProducts);
+
+          // Reset To Default
+
+          productCount.removeAttribute("disabled");
+
+          addProductBtn.innerText = "Add Product";
+          // ALlow To Update Item Data
+          updateItem();
+
+          // ALlow To Delete Item From Dom And LocalStorage
+          deleteItem();
+
+          // To Update Products Count And Hide And Show Delete All Button
+          delAllBtnToggle();
+
+          productTitle.value = "";
+          productPrice.value = "";
+          productTaxes.value = "";
+          ads.value = "";
+          productCategory.value = "";
+          productCount.value = "";
+          discount.value = "";
+        };
+      }
+    });
+  });
+}
+
+// ALlow To Delete Item From Dom And LocalStorage
 function deleteItem() {
   let productsDom = productsTable.querySelectorAll("tr");
   productsDom.forEach((el, index) => {
@@ -184,12 +296,15 @@ function deleteItem() {
 
         console.log(filteredProducts);
 
-        // Get filteredProducts Into Arr
+        // Get filteredProducts Into Array
         products = filteredProducts;
 
+        console.log(filteredProducts.length);
+
         // To Clear LocalStorage
-        if (productsDom.length - 1 == index) {
+        if (filteredProducts.length == 0) {
           localStorage.clear();
+          console.log("DOne");
         }
 
         // To update Product Count
@@ -199,6 +314,7 @@ function deleteItem() {
   });
 }
 
+// To Update Products Count And Hide And Show Delete All Button
 function delAllBtnToggle() {
   if (localStorage.getItem("products")) {
     deleteAllBtn.classList.remove("hidden");
@@ -218,4 +334,19 @@ function showTotalPrice() {
   }
 }
 
-function filterProducts(filterBy) {}
+function filterProducts(filterBy) {
+  let allProducts = productsTable.querySelectorAll("tr");
+  if (searchProduct.value.trim() != "") {
+    allProducts.forEach((product) => {
+      if (filterBy == "title") {
+        if (searchProduct.value != product.getAttribute("title")) {
+          product.style.display = "none";
+        }
+      } else if (filterBy == "category") {
+        if (searchProduct.value != product.getAttribute("data-category")) {
+          product.style.display = "none";
+        }
+      }
+    });
+  }
+}
